@@ -9,15 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Controller
+@RestController
 @RequestMapping("/file")
 public class FileController {
 
@@ -30,19 +29,24 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public String uploadFile(Authentication authentication, Model model, @RequestParam("fileUpload") MultipartFile file) throws IOException {
+    public void uploadFile(HttpServletResponse response, Authentication authentication, Model model, @RequestParam("fileUpload") MultipartFile file) throws IOException {
         Integer userId = userService.getUser(authentication.getName()).getUserId();
+        File preExisitingFile = fileService.getFile(file.getOriginalFilename());
 
-        fileService.insertFile(new File(
-                null,
-                file.getOriginalFilename(),
-                file.getContentType(),
-                file.getSize(),
-                userId,
-                file.getBytes()
-        ));
+        if(preExisitingFile == null) {
+            fileService.insertFile(new File(
+                    null,
+                    file.getOriginalFilename(),
+                    file.getContentType(),
+                    file.getSize(),
+                    userId,
+                    file.getBytes()
+            ));
+        }else{
+            model.addAttribute("error","Filename already exists!");
+        }
 
-        return "redirect:/home";
+        response.sendRedirect("/home");
     }
 
 
@@ -53,8 +57,9 @@ public class FileController {
     }
 
     @GetMapping("/delete")
-    public String deleteFile(Model model, Integer fileId) {
+    public void deleteFile(HttpServletResponse response,Model model, Integer fileId) throws IOException {
         fileService.deleteFile(fileId);
-        return "redirect:/home";
+
+        response.sendRedirect("/result");
     }
 }

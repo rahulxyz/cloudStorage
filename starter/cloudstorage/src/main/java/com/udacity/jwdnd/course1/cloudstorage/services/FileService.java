@@ -23,6 +23,10 @@ public class FileService {
         return fileMapper.getAllFiles(userId);
     }
 
+    public File getFile(String fileName){
+        return fileMapper.getFile(fileName);
+    }
+
     public void deleteFile(Integer fileId){
         fileMapper.deleteFile(fileId);
     }
