@@ -9,14 +9,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@RestController
+@Controller
 @RequestMapping("/file")
 public class FileController {
 
@@ -29,9 +31,9 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public void uploadFile(HttpServletResponse response, Authentication authentication, Model model, @RequestParam("fileUpload") MultipartFile file) throws IOException {
+    public String uploadFile(HttpServletResponse response, Authentication authentication, Model model, @RequestParam("fileUpload") MultipartFile file) throws IOException {
         Integer userId = userService.getUser(authentication.getName()).getUserId();
-        File preExisitingFile = fileService.getFile(file.getOriginalFilename());
+        File preExisitingFile = fileService.getFile(file.getOriginalFilename(), userId);
 
         if(preExisitingFile == null) {
             fileService.insertFile(new File(
@@ -42,11 +44,13 @@ public class FileController {
                     userId,
                     file.getBytes()
             ));
+            model.addAttribute("success","Filename Uploaded successfully!");
         }else{
             model.addAttribute("error","Filename already exists!");
         }
 
-        response.sendRedirect("/home");
+        //response.sendRedirect("/home");
+        return "result";
     }
 
 
@@ -57,9 +61,9 @@ public class FileController {
     }
 
     @GetMapping("/delete")
-    public void deleteFile(HttpServletResponse response,Model model, Integer fileId) throws IOException {
+    public String deleteFile(HttpServletResponse response,Model model, Integer fileId) throws IOException {
         fileService.deleteFile(fileId);
-
-        response.sendRedirect("/result");
+        model.addAttribute("success","File removed successfully!");
+       return "result";
     }
 }

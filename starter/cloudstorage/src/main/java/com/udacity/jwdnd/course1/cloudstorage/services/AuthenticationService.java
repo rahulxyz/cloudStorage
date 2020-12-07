@@ -16,11 +16,11 @@ import java.util.Base64;
 public class AuthenticationService implements AuthenticationProvider {
 
     private UserMapper userMapper;
-    private EncryptionService encryptionService;
+    private HashService hashService;
 
-    public AuthenticationService(UserMapper userMapper, EncryptionService encryptionService) {
+    public AuthenticationService(UserMapper userMapper, HashService hashService) {
         this.userMapper = userMapper;
-        this.encryptionService = encryptionService;
+        this.hashService = hashService;
     }
 
     @Override
@@ -29,9 +29,10 @@ public class AuthenticationService implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
         User user = userMapper.getUser(username);
 
-        if (user != null) {
-            String decryptedPassword = encryptionService.decryptValue(user.getPassword(), user.getSalt());
-            if (decryptedPassword.equals(password)) {
+        if(user != null){
+            String encodedSalt = user.getSalt();
+            String hashedPassword = hashService.getHashedValue(password, encodedSalt);
+            if(user.getPassword().equals(hashedPassword)){
                 return new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>());
             }
         }

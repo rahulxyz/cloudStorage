@@ -31,20 +31,16 @@ public class NotesController {
         if(note.getNoteId() != null && note.getNoteId() > 0) {
             try {
                 noteService.updateNote(note);
-                model.addAttribute("success", true);
-                model.addAttribute("message", "Note updated!");
+                model.addAttribute("success", "Note updated!");
             } catch (Exception e) {
-                model.addAttribute("error", true);
-                model.addAttribute("message", "Cannot update note " + e.getMessage());
+                model.addAttribute("error", "Cannot update note " + e.getMessage());
             }
         }else{
             try {
                 noteService.createNote(note);
-                model.addAttribute("success", true);
-                model.addAttribute("message", "New note added!");
+                model.addAttribute("success", "New note added!");
             } catch (Exception e) {
-                model.addAttribute("error", true);
-                model.addAttribute("message", "Cannot find note " + e.getMessage());
+                model.addAttribute("error", "Cannot find note " + e.getMessage());
             }
         }
 
@@ -56,11 +52,9 @@ public class NotesController {
         Integer userId = this.userService.getUser(authentication.getName()).getUserId();
         try {
             noteService.deleteNote(noteId, userId);
-            model.addAttribute("success", true);
-            model.addAttribute("message", "Credential removed!");
+            model.addAttribute("success", "Note removed!");
         } catch (Exception e) {
-            model.addAttribute("error", true);
-            model.addAttribute("message", "Cannot find credential " + e.getMessage());
+            model.addAttribute("error", "Cannot find note " + e.getMessage());
         }
 
         return "result";

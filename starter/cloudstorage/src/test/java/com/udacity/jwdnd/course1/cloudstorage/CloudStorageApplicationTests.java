@@ -13,23 +13,17 @@ class CloudStorageApplicationTests {
 	@LocalServerPort
 	private int port;
 
-	private WebDriver driver;
+	private static WebDriver driver;
 
 	@BeforeAll
 	static void beforeAll() {
 		WebDriverManager.chromedriver().setup();
+		driver = new ChromeDriver();
 	}
 
-	@BeforeEach
-	public void beforeEach() {
-		this.driver = new ChromeDriver();
-	}
-
-	@AfterEach
-	public void afterEach() {
-		if (this.driver != null) {
-			driver.quit();
-		}
+	@AfterAll
+	static void afterAll() {
+		driver.quit();
 	}
 
 	@Test

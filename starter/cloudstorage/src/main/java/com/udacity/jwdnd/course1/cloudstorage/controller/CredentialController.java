@@ -29,20 +29,16 @@ public class CredentialController {
         if (credential.getCredentialId() != null && credential.getCredentialId() > 0){
             try {
                 credentialService.updateCredential(credential);
-                model.addAttribute("success", true);
-                model.addAttribute("message", "Credential updated!");
+                model.addAttribute("success", "Credential updated!");
             } catch (Exception e) {
-                model.addAttribute("error", true);
-                model.addAttribute("message", "Cannot update credential " + e.getMessage());
+                model.addAttribute("error", "Cannot update credential " + e.getMessage());
             }
         }else{
             try {
                 credentialService.createCredential(credential);
-                model.addAttribute("success", true);
-                model.addAttribute("message", "New credential added!");
+                model.addAttribute("success", "New credential added!");
             } catch (Exception e) {
-                model.addAttribute("error", true);
-                model.addAttribute("message", "Cannot find credential " + e.getMessage());
+                model.addAttribute("error", "Cannot find credential " + e.getMessage());
             }
 
         }
@@ -54,11 +50,9 @@ public class CredentialController {
         Integer userId = this.userService.getUser(authentication.getName()).getUserId();
         try {
             credentialService.deleteCredential(credentialId, userId);
-            model.addAttribute("success", true);
-            model.addAttribute("message", "Credential removed!");
+            model.addAttribute("success", "Credential removed!");
         } catch (Exception e) {
-            model.addAttribute("error", true);
-            model.addAttribute("message", "Cannot find credential " + e.getMessage());
+            model.addAttribute("error", "Cannot find credential " + e.getMessage());
         }
 
         return "result";

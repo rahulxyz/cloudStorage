@@ -23,8 +23,8 @@ public class FileService {
         return fileMapper.getAllFiles(userId);
     }
 
-    public File getFile(String fileName){
-        return fileMapper.getFile(fileName);
+    public File getFile(String fileName, Integer userId){
+        return fileMapper.getFile(fileName, userId);
     }
 
     public void deleteFile(Integer fileId){
