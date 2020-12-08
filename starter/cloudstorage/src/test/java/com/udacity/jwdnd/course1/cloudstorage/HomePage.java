@@ -17,11 +17,20 @@ public class HomePage {
     @FindBy(id = "nav-notes-tab")
     private WebElement notesTab;
 
+    @FindBy(id = "nav-credentials-tab")
+    private WebElement credTab;
+
     @FindBy(id = "add-new-note")
     private WebElement addNoteButton;
 
+    @FindBy(id = "add-new-cred")
+    private WebElement addCredButton;
+
     @FindBy(id = "noteModal")
     private WebElement noteModal;
+
+    @FindBy(id = "credentialModal")
+    private WebElement credModal;
 
     @FindBy(id = "note-title")
     private WebElement noteTitle;
@@ -29,8 +38,20 @@ public class HomePage {
     @FindBy(id = "note-description")
     private WebElement noteDescription;
 
+    @FindBy(id = "credential-url")
+    private WebElement credURL;
+
+    @FindBy(id = "credential-username")
+    private WebElement credUname;
+
+    @FindBy(id = "credential-password")
+    private WebElement credPword;
+
     @FindBy(id = "save-note")
     private WebElement saveNoteButton;
+
+    @FindBy(id = "save-cred")
+    private WebElement saveCredButton;
 
     @FindBy(id = "goto-home")
     private WebElement gotoHome;
@@ -44,6 +65,12 @@ public class HomePage {
     @FindBy(id = "row-note-description")
     private WebElement rowNoteDescription;
 
+    @FindBy(className = "cred-row")
+    private List<WebElement> credRow;
+
+    @FindBy(className = "row-cred-uname")
+    private WebElement rowCredUname;
+
     @FindBy(id = "back-to-home")
     private WebElement backToHome;
 
@@ -52,6 +79,12 @@ public class HomePage {
 
     @FindBy(id = "delete-note-button")
     private WebElement deleteNoteButton;
+
+    @FindBy(className = "edit-cred")
+    private WebElement editCredButton;
+
+    @FindBy(className = "delete-credential-button")
+    private WebElement deleteCredButton;
 
     WebDriverWait wait;
     JavascriptExecutor jse;
@@ -70,12 +103,20 @@ public class HomePage {
         return noteRow;
     }
 
+    public List<WebElement> getCredRow() {
+        return credRow;
+    }
+
     public WebElement getNoteTable() {
         return noteTable;
     }
 
     public WebElement getAddNoteButton() {
         return addNoteButton;
+    }
+
+    public WebElement getAddCredButton() {
+        return addCredButton;
     }
 
     public void setNoteTitle(String noteTitle) {
@@ -90,8 +131,24 @@ public class HomePage {
         return notesTab;
     }
 
+    public WebElement getCredTab() {
+        return credTab;
+    }
+
     public WebElement getLogoutButton() {
         return logoutButton;
+    }
+
+    public void setCredURL(String credURL) {
+        this.credURL.sendKeys(credURL);
+    }
+
+    public void setCredUname(String credUname) {
+        this.credUname.sendKeys(credUname);
+    }
+
+    public void setCredPword(String credPword) {
+        this.credPword.sendKeys(credPword);
     }
 
     public void logout(){
@@ -102,6 +159,10 @@ public class HomePage {
         jse.executeScript("arguments[0].click()", notesTab);
     }
 
+    public void gotoCredTab() throws InterruptedException {
+        jse.executeScript("arguments[0].click()", credTab);
+    }
+
     public void clickAddNote(){
         addNoteButton.click();
         wait.until(ExpectedConditions.visibilityOf(noteModal));
@@ -110,6 +171,16 @@ public class HomePage {
     public void clickEditNote(WebElement editNoteButton){
         editNoteButton.click();
         wait.until(ExpectedConditions.visibilityOf(noteModal));
+    }
+
+    public void clickAddCred(){
+        addCredButton.click();
+        wait.until(ExpectedConditions.visibilityOf(credModal));
+    }
+
+    public void clickEditCred(WebElement editCredButton){
+        editCredButton.click();
+        wait.until(ExpectedConditions.visibilityOf(credModal));
     }
 
     public void clickDeleteNote(WebElement deleteNoteButton){
@@ -130,9 +201,24 @@ public class HomePage {
         wait.until(ExpectedConditions.visibilityOf(rowNoteDescription));
     }
 
+    public void goBackToCred() throws InterruptedException {
+        jse.executeScript("arguments[0].click()", backToHome);
+        wait.until(ExpectedConditions.visibilityOf(credTab));
+        gotoCredTab();
+        wait.until(ExpectedConditions.visibilityOf(rowCredUname));
+    }
+
     public void editNote(String description){
         noteDescription.clear();
         setNoteDescription(description);
         saveNoteButton.click();
+    }
+
+    public void saveCred(String url, String uname, String pwd){
+        clickAddCred();
+        setCredURL(url);
+        setCredUname(uname);
+        setCredPword(pwd);
+        saveCredButton.click();
     }
 }

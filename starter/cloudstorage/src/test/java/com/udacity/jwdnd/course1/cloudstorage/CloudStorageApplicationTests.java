@@ -35,13 +35,18 @@ class CloudStorageApplicationTests {
 
 	String fname = "Rahul";
 	String lname = "Gupta";
-	String uname = "ra1";
+	String uname = "ra13";
 	String pword = "1234";
 
 	/*Notes*/
 	String title = "My Note 1";
 	String description = "Description 2";
 	String updateDescription = ">>>>Updated Description 1";
+
+	/* Credential */
+	String url = "http://localhost:8080/home";
+	String cred_user = "rahul12";
+	String cred_pwd = "3456";
 
 	@BeforeAll
 	static void beforeAll() {
@@ -120,13 +125,28 @@ class CloudStorageApplicationTests {
 		List<WebElement> rows = homePage.getNoteRow();
 		WebElement deleteButton = rows.get(rows.size()-1).findElement(By.id("delete-note-button"));
 		String removedDescription = rows.get(rows.size()-1).findElement(By.id("row-note-description")).getText();
-		System.out.println(">>>>>>>>>>>> "+ removedDescription);
+
 		homePage.clickDeleteNote(deleteButton);
 
 		homePage.goBackToNotes();
 		WebElement rowAdded = rows.get(rows.size()-1).findElement(By.id("row-note-description"));
 		Assertions.assertNotEquals(removedDescription, rowAdded.getText());
 
+		testLogout();
+	}
+
+	@Test
+	@Order(6)
+	public void testSaveCred() throws InterruptedException {
+		testLogin();
+		wait.until(ExpectedConditions.visibilityOf(homePage.getCredTab()));
+		homePage.gotoCredTab();
+		wait.until(ExpectedConditions.visibilityOf(homePage.getAddCredButton()));
+		homePage.saveCred(url, cred_user, cred_pwd);
+		homePage.goBackToCred();
+		List<WebElement> rows = homePage.getCredRow();
+		WebElement rowAdded = rows.get(rows.size()-1).findElement(By.className("row-cred-uname"));
+		Assertions.assertEquals(cred_user, rowAdded.getText());
 		testLogout();
 	}
 
