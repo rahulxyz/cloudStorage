@@ -3,7 +3,6 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,11 +44,10 @@ public class CredentialController {
         return "result";
     }
 
-    @PostMapping("/delete/{credentialId}")
-    public String deleteCredential(Authentication authentication, Model model, @PathVariable Integer credentialId){
-        Integer userId = this.userService.getUser(authentication.getName()).getUserId();
+    @GetMapping("/delete")
+    public String deleteCredential(Authentication authentication, Model model, Integer credentialId){
         try {
-            credentialService.deleteCredential(credentialId, userId);
+            credentialService.deleteCredential(credentialId);
             model.addAttribute("success", "Credential removed!");
         } catch (Exception e) {
             model.addAttribute("error", "Cannot find credential " + e.getMessage());

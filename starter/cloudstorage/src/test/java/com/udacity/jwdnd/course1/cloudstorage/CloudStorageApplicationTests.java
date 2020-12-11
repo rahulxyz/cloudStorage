@@ -13,6 +13,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 
 import java.util.List;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
 
@@ -35,18 +36,19 @@ class CloudStorageApplicationTests {
 
 	String fname = "Rahul";
 	String lname = "Gupta";
-	String uname = "ra13";
+	String uname = "ra18";
 	String pword = "1234";
 
 	/*Notes*/
-	String title = "My Note 1";
-	String description = "Description 2";
-	String updateDescription = ">>>>Updated Description 1";
+	String title = "My Note 34";
+	String description = "Description 34";
+	String updateDescription = "Updated Description 1";
 
 	/* Credential */
 	String url = "http://localhost:8080/home";
 	String cred_user = "rahul12";
 	String cred_pwd = "3456";
+	String update_cred_user = "updated-rahul12";
 
 	@BeforeAll
 	static void beforeAll() {
@@ -125,13 +127,14 @@ class CloudStorageApplicationTests {
 		List<WebElement> rows = homePage.getNoteRow();
 		WebElement deleteButton = rows.get(rows.size()-1).findElement(By.id("delete-note-button"));
 		String removedDescription = rows.get(rows.size()-1).findElement(By.id("row-note-description")).getText();
-
 		homePage.clickDeleteNote(deleteButton);
-
 		homePage.goBackToNotes();
-		WebElement rowAdded = rows.get(rows.size()-1).findElement(By.id("row-note-description"));
-		Assertions.assertNotEquals(removedDescription, rowAdded.getText());
-
+		if(rows.size() != 0 ) {
+			WebElement lastRow = rows.get(rows.size() - 1).findElement(By.id("row-note-description"));
+			Assertions.assertNotEquals(removedDescription, lastRow.getText());
+		}else{
+			Assertions.assertEquals(rows.size(), 0);
+		}
 		testLogout();
 	}
 
@@ -149,6 +152,48 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals(cred_user, rowAdded.getText());
 		testLogout();
 	}
+
+	@Test
+	@Order(7)
+	public void testEditCred() throws InterruptedException {
+		testLogin();
+		wait.until(ExpectedConditions.visibilityOf(homePage.getCredTab()));
+		homePage.gotoCredTab();
+		wait.until(ExpectedConditions.visibilityOf(homePage.getAddCredButton()));
+		List<WebElement> rows = homePage.getCredRow();
+		WebElement editButton = rows.get(rows.size()-1).findElement(By.className("edit-cred"));
+		homePage.clickEditCred(editButton);
+		homePage.editCred(update_cred_user);
+		homePage.goBackToCred();
+		WebElement rowAdded = rows.get(rows.size()-1).findElement(By.className("row-cred-uname"));
+		Assertions.assertEquals(update_cred_user, rowAdded.getText());
+		testLogout();
+	}
+
+	@Test
+	@Order(8)
+	public void testDeleteCred() throws InterruptedException {
+		testLogin();
+		wait.until(ExpectedConditions.visibilityOf(homePage.getCredTab()));
+		homePage.gotoCredTab();
+		wait.until(ExpectedConditions.visibilityOf(homePage.getAddCredButton()));
+
+		List<WebElement> rows = homePage.getCredRow();
+		WebElement deleteButton = rows.get(rows.size()-1).findElement(By.id("delete-credential-button"));
+		String removedUsername = rows.get(rows.size()-1).findElement(By.className("row-cred-uname")).getText();
+
+		homePage.clickDeleteCred(deleteButton);
+		homePage.goBackToCred();
+		if( rows.size() != 0){
+		WebElement lastRow = rows.get(rows.size()-1).findElement(By.className("row-cred-uname"));
+		Assertions.assertEquals(removedUsername, lastRow.getText());
+		}else{
+			Assertions.assertEquals(rows.size(), 0);
+		}
+		testLogout();
+	}
+
+
 
 	public void testSignup() {
 		driver.get(baseUrl + signupPath);

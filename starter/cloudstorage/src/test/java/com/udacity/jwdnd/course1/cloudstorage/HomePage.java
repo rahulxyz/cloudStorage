@@ -184,7 +184,13 @@ public class HomePage {
     }
 
     public void clickDeleteNote(WebElement deleteNoteButton){
-        deleteNoteButton.click();
+        jse.executeScript("arguments[0].click()", deleteNoteButton);
+        wait.until(ExpectedConditions.visibilityOf(backToHome));
+    }
+
+    public void clickDeleteCred(WebElement deleteCredButton){
+        jse.executeScript("arguments[0].click()", deleteCredButton);
+        wait.until(ExpectedConditions.visibilityOf(backToHome));
     }
 
     public void saveNote(String title, String description){
@@ -198,20 +204,26 @@ public class HomePage {
         jse.executeScript("arguments[0].click()", backToHome);
         wait.until(ExpectedConditions.visibilityOf(notesTab));
         gotoNotesTab();
-        wait.until(ExpectedConditions.visibilityOf(rowNoteDescription));
+        wait.until(ExpectedConditions.visibilityOf(addNoteButton));
     }
 
     public void goBackToCred() throws InterruptedException {
         jse.executeScript("arguments[0].click()", backToHome);
         wait.until(ExpectedConditions.visibilityOf(credTab));
         gotoCredTab();
-        wait.until(ExpectedConditions.visibilityOf(rowCredUname));
+        wait.until(ExpectedConditions.visibilityOf(addCredButton));
     }
 
     public void editNote(String description){
         noteDescription.clear();
         setNoteDescription(description);
         saveNoteButton.click();
+    }
+
+    public void editCred(String username){
+        credUname.clear();
+        setCredUname(username);
+        saveCredButton.click();
     }
 
     public void saveCred(String url, String uname, String pwd){

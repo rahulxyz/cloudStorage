@@ -78,10 +78,7 @@
                                     <tr th:each="note: ${noteList}" class="note-row">
                                         <td>
                                             <button id="edit-note" type="button" class="btn btn-success" th:onclick="showNoteModal([[${note}]])">Edit</button>
-                                            <form action="#" th:action="@{'/notes/delete/' + ${note.getNoteId()}}" method="POST" hidden="true" aria-hidden="true">
-                                                <button type="submit" class="btn btn-danger" id="deleteNote" >Delete</button>
-                                            </form>
-                                            <button type="submit" class="btn btn-danger" id="delete-note-button" onclick="$('#deleteNote').click();">Delete</button>
+                                            <a id="delete-note-button" th:href="@{/notes/delete(noteId=${note.noteId})}" class="btn btn-danger">Delete</a>
                                         </td>
                                         <th scope="row" th:text="${note.getNoteTitle()}"></th>
                                         <td id="row-note-description" th:text="${note.getNoteDescription()}"></td>
@@ -140,10 +137,7 @@
                                 <tr class="cred-row" th:each="credential: ${credentialList}">
                                     <td>
                                         <button type="button" class="btn btn-success edit-cred" th:onclick="showCredentialModal([[${credential}]])">Edit</button>
-                                        <form action="#" th:action="@{'/credentials/delete/' + ${credential.getCredentialId()}}" method="POST" hidden="true" aria-hidden="true">
-                                            <button type="submit" class="btn btn-danger" id="deleteCredential" >Delete</button>
-                                        </form>
-                                        <button type="submit" class="btn btn-danger" id="delete-credential-button" onclick="$('#deleteCredential').click();">Delete</button>
+                                        <a id="delete-credential-button" th:href="@{/credentials/delete(credentialId=${credential.credentialId})}" class="btn btn-danger">Delete</a>
                                     </td>
                                     <th scope="row" th:text="${credential.getUrl()}">Example Credential URL</th>
                                     <td class="row-cred-uname" th:text="${credential.getUsername()}">Example Credential Username</td>

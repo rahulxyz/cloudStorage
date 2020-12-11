@@ -1,6 +1,5 @@
 package com.udacity.jwdnd.course1.cloudstorage.mapper;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.Notes;
 import org.apache.ibatis.annotations.*;
 
@@ -19,6 +18,6 @@ public interface NotesMapper {
     @Update("Update Notes Set noteTitle=#{noteTitle}, noteDescription=#{noteDescription} where noteId=#{noteId} AND userId=#{userId}")
     int updateNote(Notes notes);
 
-    @Delete("Delete from Notes where noteId=#{noteId} AND userId=#{userId}")
-    int deleteNote(Integer noteId, Integer userId);
+    @Delete("Delete from Notes where noteId=#{noteId}")
+    int deleteNote(Integer noteId);
 }
