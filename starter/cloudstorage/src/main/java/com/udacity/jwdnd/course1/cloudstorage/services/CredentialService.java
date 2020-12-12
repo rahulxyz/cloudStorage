@@ -60,15 +60,6 @@ public class CredentialService {
     }
 
     public List<Credential> getCredentials(Integer userId){
-        List<Credential> credentialList = credentialMapper.getAllCredential(userId);
-        for(Credential credential: credentialList){
-            String key  = credential.getKey();
-            String password = credential.getPassword();
-            String decryptedPwd = encryptionService.decryptValue(password, key);
-
-            credential.setPassword(decryptedPwd);
-        }
-
-        return credentialList;
+        return credentialMapper.getAllCredential(userId);
     }
 }

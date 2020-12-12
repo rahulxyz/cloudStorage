@@ -34,8 +34,12 @@ public class FileController {
     public String uploadFile(HttpServletResponse response, Authentication authentication, Model model, @RequestParam("fileUpload") MultipartFile file) throws IOException {
         Integer userId = userService.getUser(authentication.getName()).getUserId();
         File preExisitingFile = fileService.getFile(file.getOriginalFilename(), userId);
-
-        if(preExisitingFile == null) {
+        if(file.getOriginalFilename()=="" || file.getSize()==0){
+            model.addAttribute("error","Incorrect type of file uploaded!");
+        }
+        else if(preExisitingFile != null) {
+            model.addAttribute("error","Filename already exists!");
+        }else{
             fileService.insertFile(new File(
                     null,
                     file.getOriginalFilename(),
@@ -45,11 +49,8 @@ public class FileController {
                     file.getBytes()
             ));
             model.addAttribute("success","Filename Uploaded successfully!");
-        }else{
-            model.addAttribute("error","Filename already exists!");
         }
 
-        //response.sendRedirect("/home");
         return "result";
     }
 
